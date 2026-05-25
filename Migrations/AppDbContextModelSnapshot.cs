@@ -1,0 +1,151 @@
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using PJATK_APBD_Cw4_s29820.Data;
+
+#nullable disable
+
+namespace PJATK_APBD_Cw4_s29820.Migrations;
+
+[DbContext(typeof(AppDbContext))]
+partial class AppDbContextModelSnapshot : ModelSnapshot
+{
+    protected override void BuildModel(ModelBuilder modelBuilder)
+    {
+#pragma warning disable 612, 618
+        modelBuilder
+            .HasAnnotation("ProductVersion", "8.0.11")
+            .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+        SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.Component", b =>
+        {
+            b.Property<string>("Code")
+                .HasMaxLength(10)
+                .HasColumnType("char(10)")
+                .IsFixedLength();
+
+            b.Property<int>("ComponentManufacturersId").HasColumnType("int");
+            b.Property<int>("ComponentTypesId").HasColumnType("int");
+            b.Property<string>("Description").IsRequired().HasColumnType("nvarchar(max)");
+            b.Property<string>("Name").IsRequired().HasMaxLength(300).HasColumnType("nvarchar(300)");
+
+            b.HasKey("Code");
+            b.HasIndex("ComponentManufacturersId");
+            b.HasIndex("ComponentTypesId");
+            b.ToTable("Components");
+
+            b.HasData(
+                new { Code = "CPU0000001", ComponentManufacturersId = 1, ComponentTypesId = 1, Description = "8-core gaming processor", Name = "Ryzen 7 7800X3D" },
+                new { Code = "GPU0000001", ComponentManufacturersId = 2, ComponentTypesId = 2, Description = "High-end gaming graphics card", Name = "RTX 4080 Super" },
+                new { Code = "RAM0000001", ComponentManufacturersId = 3, ComponentTypesId = 3, Description = "DDR5 RAM module 16GB", Name = "Corsair Vengeance DDR5 16GB" });
+        });
+
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.ComponentManufacturer", b =>
+        {
+            b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("int");
+            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+            b.Property<string>("Abbreviation").IsRequired().HasMaxLength(30).HasColumnType("nvarchar(30)");
+            b.Property<DateOnly>("FoundationDate").HasColumnType("date");
+            b.Property<string>("FullName").IsRequired().HasMaxLength(300).HasColumnType("nvarchar(300)");
+            b.HasKey("Id");
+            b.ToTable("ComponentManufacturers");
+
+            b.HasData(
+                new { Id = 1, Abbreviation = "AMD", FoundationDate = new DateOnly(1969, 5, 1), FullName = "Advanced Micro Devices" },
+                new { Id = 2, Abbreviation = "NV", FoundationDate = new DateOnly(1993, 4, 5), FullName = "NVIDIA Corporation" },
+                new { Id = 3, Abbreviation = "COR", FoundationDate = new DateOnly(1994, 1, 1), FullName = "Corsair Gaming Inc." });
+        });
+
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.ComponentType", b =>
+        {
+            b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("int");
+            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+            b.Property<string>("Abbreviation").IsRequired().HasMaxLength(30).HasColumnType("nvarchar(30)");
+            b.Property<string>("Name").IsRequired().HasMaxLength(150).HasColumnType("nvarchar(150)");
+            b.HasKey("Id");
+            b.ToTable("ComponentTypes");
+
+            b.HasData(
+                new { Id = 1, Abbreviation = "CPU", Name = "Processor" },
+                new { Id = 2, Abbreviation = "GPU", Name = "Graphics Card" },
+                new { Id = 3, Abbreviation = "RAM", Name = "Memory" });
+        });
+
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.Pc", b =>
+        {
+            b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("int");
+            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+            b.Property<DateTime>("CreatedAt").HasColumnType("datetime");
+            b.Property<string>("Name").IsRequired().HasMaxLength(50).HasColumnType("nvarchar(50)");
+            b.Property<int>("Stock").HasColumnType("int");
+            b.Property<int>("Warranty").HasColumnType("int");
+            b.Property<float>("Weight").HasColumnType("float(5)");
+            b.HasKey("Id");
+            b.ToTable("PCs");
+
+            b.HasData(
+                new { Id = 1, CreatedAt = new DateTime(2026, 5, 8, 9, 0, 0), Name = "Gaming Beast X", Stock = 5, Warranty = 36, Weight = 12.5f },
+                new { Id = 2, CreatedAt = new DateTime(2026, 4, 15, 13, 30, 0), Name = "Office Mini Pro", Stock = 12, Warranty = 24, Weight = 4.2f },
+                new { Id = 3, CreatedAt = new DateTime(2026, 3, 1, 10, 0, 0), Name = "Budget Student PC", Stock = 8, Warranty = 12, Weight = 6.7f });
+        });
+
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.PcComponent", b =>
+        {
+            b.Property<int>("PcId").HasColumnName("PCId").HasColumnType("int");
+            b.Property<string>("ComponentCode").HasMaxLength(10).HasColumnType("char(10)").IsFixedLength();
+            b.Property<int>("Amount").HasColumnType("int");
+            b.HasKey("PcId", "ComponentCode");
+            b.HasIndex("ComponentCode");
+            b.ToTable("PCComponents");
+
+            b.HasData(
+                new { PcId = 1, ComponentCode = "CPU0000001", Amount = 1 },
+                new { PcId = 1, ComponentCode = "GPU0000001", Amount = 1 },
+                new { PcId = 1, ComponentCode = "RAM0000001", Amount = 2 },
+                new { PcId = 2, ComponentCode = "CPU0000001", Amount = 1 },
+                new { PcId = 2, ComponentCode = "RAM0000001", Amount = 2 },
+                new { PcId = 3, ComponentCode = "CPU0000001", Amount = 1 },
+                new { PcId = 3, ComponentCode = "RAM0000001", Amount = 1 });
+        });
+
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.Component", b =>
+        {
+            b.HasOne("PJATK_APBD_Cw4_s29820.Models.Entities.ComponentManufacturer", "ComponentManufacturer")
+                .WithMany("Components")
+                .HasForeignKey("ComponentManufacturersId")
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+            b.HasOne("PJATK_APBD_Cw4_s29820.Models.Entities.ComponentType", "ComponentType")
+                .WithMany("Components")
+                .HasForeignKey("ComponentTypesId")
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+            b.Navigation("ComponentManufacturer");
+            b.Navigation("ComponentType");
+        });
+
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.PcComponent", b =>
+        {
+            b.HasOne("PJATK_APBD_Cw4_s29820.Models.Entities.Component", "Component")
+                .WithMany("PcComponents")
+                .HasForeignKey("ComponentCode")
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+            b.HasOne("PJATK_APBD_Cw4_s29820.Models.Entities.Pc", "Pc")
+                .WithMany("PcComponents")
+                .HasForeignKey("PcId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+            b.Navigation("Component");
+            b.Navigation("Pc");
+        });
+
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.ComponentManufacturer", b => b.Navigation("Components"));
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.ComponentType", b => b.Navigation("Components"));
+        modelBuilder.Entity("PJATK_APBD_Cw4_s29820.Models.Entities.Pc", b => b.Navigation("PcComponents"));
+#pragma warning restore 612, 618
+    }
+}
